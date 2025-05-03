@@ -82,7 +82,3 @@ Google Gemini APIは無料枠があり、特にGemini 1.5 Flashモデルを使�
 ## ライセンス
 
 MITライセンス
-
-## 作者
-
-© 2025 LLM Translator Team
