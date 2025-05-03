@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>翻訳履歴 - LLM Translator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
+    }
+    
+    h1 {
+      margin: 0;
+      color: #4285f4;
+      font-size: 28px;
+    }
+    
+    .btn {
+      padding: 8px 16px;
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+    
+    .btn:hover {
+      background-color: #3367d6;
+    }
+    
+    .btn-secondary {
+      background-color: #f1f3f4;
+      color: #5f6368;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #e8eaed;
+    }
+    
+    .btn-danger {
+      background-color: #ea4335;
+    }
+    
+    .btn-danger:hover {
+      background-color: #d33426;
+    }
+    
+    .action-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .history-empty {
+      text-align: center;
+      padding: 40px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .history-item {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 20px;
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .history-timestamp {
+      color: #5f6368;
+      font-size: 14px;
+    }
+    
+    .history-language {
+      display: inline-block;
+      background-color: #e8f0fe;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #4285f4;
+    }
+    
+    .history-content {
+      display: flex;
+    }
+    
+    .history-original, .history-translated {
+      flex: 1;
+      padding: 20px;
+    }
+    
+    .history-original {
+      border-right: 1px solid #eee;
+    }
+    
+    .history-label {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #5f6368;
+    }
+    
+    .history-text {
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+    
+    .search-box {
+      width: 300px;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .filter-options {
+      margin-top: 20px;
+      margin-bottom: 30px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .filter-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .filter-label {
+      font-weight: bold;
+      color: #5f6368;
+    }
+    
+    select {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: white;
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 30px;
+    }
+    
+    .page-btn {
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      background-color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .page-btn.active {
+      background-color: #4285f4;
+      color: white;
+      border-color: #4285f4;
+    }
+    
+    #copy-success {
+      display: none;
+      background-color: #4caf50;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>翻訳履歴</h1>
+    <div class="btn-group">
+      <button id="options-btn" class="btn">設定</button>
+    </div>
+  </div>
+  
+  <div class="action-bar">
+    <input type="text" id="search-box" class="search-box" placeholder="履歴を検索...">
+    <div class="btn-group">
+      <button id="clear-history-btn" class="btn btn-danger">履歴をクリア</button>
+    </div>
+  </div>
+  
+  <div class="filter-options">
+    <div class="filter-item">
+      <div class="filter-label">言語:</div>
+      <select id="language-filter">
+        <option value="all">すべての言語</option>
+        <option value="ja">日本語</option>
+        <option value="en">英語</option>
+        <option value="fr">フランス語</option>
+        <option value="es">スペイン語</option>
+        <option value="de">ドイツ語</option>
+        <option value="zh">中国語</option>
+        <option value="ko">韓国語</option>
+      </select>
+    </div>
+    
+    <div class="filter-item">
+      <div class="filter-label">AIサービス:</div>
+      <select id="service-filter">
+        <option value="all">すべてのサービス</option>
+        <option value="openai">ChatGPT</option>
+        <option value="claude">Claude</option>
+        <option value="gemini">Gemini</option>
+      </select>
+    </div>
+    
+    <div class="filter-item">
+      <div class="filter-label">モデルバージョン:</div>
+      <select id="model-filter">
+        <option value="all">すべてのモデル</option>
+        <!-- モデルオプションは動的に生成されます -->
+      </select>
+    </div>
+  </div>
+  
+  <div id="history-container">
+    <!-- 履歴アイテムがここに表示されます -->
+  </div>
+  
+  <div id="pagination" class="pagination">
+    <!-- ページネーションボタンがここに表示されます -->
+  </div>
+  
+  <div id="copy-success">コピーしました！</div>
+  
+  <script src="history.js"></script>
+</body>
+</html>

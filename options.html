@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LLM Translator 設定</title>
+  <style>
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    select {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .btn {
+      padding: 8px 15px;
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #3367d6;
+    }
+    #status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    h1 {
+      color: #4285f4;
+      margin-bottom: 25px;
+    }
+    .service-info {
+      font-size: 13px;
+      margin-top: 5px;
+      color: #666;
+    }
+    .api-key-hint {
+      margin-top: 5px;
+      font-size: 12px;
+      color: #666;
+    }
+    .service-divider {
+      margin: 20px 0;
+      border-top: 1px solid #eee;
+    }
+    .model-section {
+      margin-top: 10px;
+      padding-left: 15px;
+      border-left: 2px solid #eee;
+    }
+    .model-management {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+    }
+    .model-input-group {
+      display: flex;
+      margin-bottom: 8px;
+    }
+    .model-input-group input {
+      flex-grow: 1;
+      margin-right: 8px;
+    }
+    .model-list {
+      max-height: 150px;
+      overflow-y: auto;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px;
+      background-color: white;
+    }
+    .model-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px;
+      border-bottom: 1px solid #eee;
+    }
+    .model-item:last-child {
+      border-bottom: none;
+    }
+    .model-item button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 2px 8px;
+      cursor: pointer;
+    }
+    .small-btn {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    details {
+      margin-top: 15px;
+    }
+    .api-key-section {
+      margin-top: 20px;
+    }
+    .api-service-key {
+      display: none;
+      margin-bottom: 15px;
+    }
+    .app-description {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+    .service-detail {
+      background-color: #e8f4fd;
+      padding: 10px;
+      border-left: 3px solid #4285f4;
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .service-free {
+      color: #0d8527;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>LLM Translator 設定</h1>
+  
+  <div class="app-description">
+    <h2>LLM Translator について</h2>
+    <p>LLM Translatorは、高性能AI言語モデル（LLM）を活用した翻訳拡張機能です。選択したテキストをAIモデルを使用して翻訳し、自然で高品質な翻訳結果を提供します。</p>
+    <p>使用方法: テキストを選択し、右クリックメニューから「選択テキストを翻訳」を選択するだけです。翻訳結果は新しいタブで表示され、自動的に翻訳履歴に保存されます。</p>
+    <p>このページでは、使用するAIサービス、モデル、APIキーなどの設定を行えます。</p>
+  </div>
+  
+  <div class="form-group">
+    <label for="llm-service">使用するLLMサービス:</label>
+    <select id="llm-service">
+      <option value="openai">OpenAI ChatGPT</option>
+      <option value="claude">Anthropic Claude</option>
+      <option value="gemini">Google Gemini</option>
+    </select>
+    <div class="service-info">使用したいAIサービスを選択してください。各サービスごとにAPIキーが必要です。</div>
+    
+    <div class="service-detail">
+      <p>選択したサービスとモデルが翻訳に使用されます。サービスごとの特徴:</p>
+      <ul>
+        <li><strong>OpenAI ChatGPT</strong>: 高品質な翻訳が可能ですが、APIキーの取得と使用には料金がかかります。</li>
+        <li><strong>Anthropic Claude</strong>: 長文の翻訳に強みがあり、文脈を考慮した自然な翻訳を提供します。APIキーの取得と使用には料金がかかります。</li>
+        <li><strong>Google Gemini</strong>: <span class="service-free">Gemini APIの無料枠を使用することで、無料で翻訳機能を利用できます</span>。特にGemini 1.5 Flashモデルは無料枠の範囲内でも高品質な翻訳が可能です。</li>
+      </ul>
+    </div>
+    
+    <div class="model-section">
+      <div id="openai-models" class="model-options">
+        <label for="openai-model">モデル:</label>
+        <select id="openai-model">
+          <option value="gpt-4o-mini-2024-07-18">GPT-4o mini</option>
+          <option value="gpt-4o-2024-08-06">GPT-4o</option>
+          <option value="gpt-4.1-2025-04-14">GPT-4.1</option>
+          <!-- カスタムモデルはJSで動的に追加されます -->
+        </select>
+        
+        <details id="openai-model-management" class="model-management">
+          <summary>モデルの追加・削除</summary>
+          <div class="model-input-group">
+            <input type="text" id="openai-model-id" placeholder="モデルID（例: gpt-4-0613）">
+            <input type="text" id="openai-model-name" placeholder="表示名（例: GPT-4 0613）">
+            <button id="openai-add-model" class="small-btn">追加</button>
+          </div>
+          <div id="openai-model-list" class="model-list">
+            <!-- モデルリストはJSで動的に生成されます -->
+          </div>
+        </details>
+      </div>
+      
+      <div id="claude-models" class="model-options" style="display: none;">
+        <label for="claude-model">モデル:</label>
+        <select id="claude-model">
+          <option value="claude-3-haiku-20240307">Claude 3 Haiku</option>
+          <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku</option>
+          <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet</option>
+          <option value="claude-3-7-sonnet-20250219">Claude 3.7 Sonnet</option>
+          <!-- カスタムモデルはJSで動的に追加されます -->
+        </select>
+        
+        <details id="claude-model-management" class="model-management">
+          <summary>モデルの追加・削除</summary>
+          <div class="model-input-group">
+            <input type="text" id="claude-model-id" placeholder="モデルID（例: claude-3-sonnet-20240229）">
+            <input type="text" id="claude-model-name" placeholder="表示名（例: Claude 3 Sonnet）">
+            <button id="claude-add-model" class="small-btn">追加</button>
+          </div>
+          <div id="claude-model-list" class="model-list">
+            <!-- モデルリストはJSで動的に生成されます -->
+          </div>
+        </details>
+      </div>
+      
+      <div id="gemini-models" class="model-options" style="display: none;">
+        <label for="gemini-model">モデル:</label>
+        <select id="gemini-model">
+          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+          <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+          <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite</option>
+          <option value="gemini-2.5-pro-preview-03-25">Gemini 2.5 Pro プレビュー</option>
+          <option value="gemini-2.5-flash-preview-04-17">Gemini 2.5 Flash プレビュー版 04-17</option>
+          <!-- カスタムモデルはJSで動的に追加されます -->
+        </select>
+        
+        <details id="gemini-model-management" class="model-management">
+          <summary>モデルの追加・削除</summary>
+          <div class="model-input-group">
+            <input type="text" id="gemini-model-id" placeholder="モデルID（例: gemini-2.0-pro）">
+            <input type="text" id="gemini-model-name" placeholder="表示名（例: Gemini 2.0 Pro）">
+            <button id="gemini-add-model" class="small-btn">追加</button>
+          </div>
+          <div id="gemini-model-list" class="model-list">
+            <!-- モデルリストはJSで動的に生成されます -->
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+  
+  <div class="service-divider"></div>
+  
+  <div class="form-group api-key-section">
+    <h3>APIキー設定</h3>
+    
+    <div id="openai-api-key" class="api-service-key">
+      <label for="openai-key">OpenAI APIキー:</label>
+      <input type="text" id="openai-key" placeholder="sk-...">
+      <div class="api-key-hint">OpenAI APIキーを入力してください。形式: sk-...</div>
+      <div class="service-detail">
+        <p><strong>OpenAI APIキーの取得方法:</strong></p>
+        <ol>
+          <li><a href="https://platform.openai.com/signup" target="_blank">OpenAIのプラットフォーム</a>でアカウント作成</li>
+          <li>ダッシュボードから「API Keys」を選択</li>
+          <li>「Create new secret key」をクリックして新しいキーを作成</li>
+          <li>料金は使用量に応じて発生します<a href="https://ai.google.dev/gemini-api/docs/rate-limits?hl=ja" target="_blank">こちら</a></li>
+        </ol>
+      </div>
+    </div>
+    
+    <div id="claude-api-key" class="api-service-key">
+      <label for="claude-key">Anthropic Claude APIキー:</label>
+      <input type="text" id="claude-key" placeholder="sk-ant-...">
+      <div class="api-key-hint">Anthropic Claude APIキーを入力してください。形式: sk-ant-...</div>
+      <div class="service-detail">
+        <p><strong>Claude APIキーの取得方法:</strong></p>
+        <ol>
+          <li><a href="https://console.anthropic.com/" target="_blank">Anthropic Console</a>にアクセスしてアカウント作成</li>
+          <li>コンソールから「API Keys」セクションに移動</li>
+          <li>「Create API Key」をクリックして新しいキーを作成</li>
+          <li>料金は使用量に応じて発生します。詳しくは<a href="https://www.anthropic.com/pricing#api" target="_blank">こちら</a></li>
+        </ol>
+      </div>
+    </div>
+    
+    <div id="gemini-api-key" class="api-service-key">
+      <label for="gemini-key">Google Gemini APIキー:</label>
+      <input type="text" id="gemini-key" placeholder="AIzaSy...">
+      <div class="api-key-hint">Google AI Studio APIキーを入力してください。</div>
+      <div class="service-detail">
+        <p><strong>Gemini APIキーの取得方法:</strong></p>
+        <ol>
+          <li><a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a>にアクセスしてログイン</li>
+          <li>「Get API key」をクリック</li>
+          <li>新しいキーを作成するか既存のキーをコピー</li>
+          <li>無料枠: 使用するモデルによってレートリミットが異なります。詳しくは<a href="https://ai.google.dev/gemini-api/docs/rate-limits?hl=ja" target="_blank">こちら</a></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="target-lang">デフォルト翻訳先言語:</label>
+    <select id="target-lang">
+      <option value="ja">日本語</option>
+      <option value="en">英語</option>
+      <option value="fr">フランス語</option>
+      <option value="es">スペイン語</option>
+      <option value="de">ドイツ語</option>
+      <option value="zh">中国語</option>
+      <option value="ko">韓国語</option>
+    </select>
+  </div>
+  
+  <button id="save-btn" class="btn">保存</button>
+  
+  <div id="status" style="display: none;"></div>
+  
+  <script src="options.js"></script>
+</body>
+</html>
